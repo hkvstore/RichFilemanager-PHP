@@ -103,7 +103,7 @@ class UploadHandler extends BaseUploadHandler
         return parent::get_unique_filename($file_path, $name, $size, $type, $error, $index, $content_range);
     }
 
-    protected function validate($uploaded_file, $file, $error, $index)
+    protected function validate($uploaded_file, $file, $error, $index, $content_range)
     {
         if ($error) {
             $file->error = $this->get_error_message($error);
@@ -155,45 +155,8 @@ class UploadHandler extends BaseUploadHandler
             $file->error = $this->get_error_message('max_number_of_files');
             return false;
         }
-        $max_width = @$this->options['max_width'];
-        $max_height = @$this->options['max_height'];
-        $min_width = @$this->options['min_width'];
-        $min_height = @$this->options['min_height'];
-        if (($max_width || $max_height || $min_width || $min_height) && $this->is_valid_image_name($file->name)) {
-            list($img_width, $img_height) = $this->get_image_size($uploaded_file);
-
-            // If we are auto rotating the image by default, do the checks on
-            // the correct orientation
-            if (
-                @$this->options['image_versions']['']['auto_orient'] &&
-                function_exists('exif_read_data') &&
-                ($exif = @exif_read_data($uploaded_file)) &&
-                (((int) @$exif['Orientation']) >= 5 )
-            ) {
-                $tmp = $img_width;
-                $img_width = $img_height;
-                $img_height = $tmp;
-                unset($tmp);
-            }
-
-        }
-        if (!empty($img_width)) {
-            if ($max_width && $img_width > $max_width) {
-                $file->error = $this->get_error_message('max_width');
-                return false;
-            }
-            if ($max_height && $img_height > $max_height) {
-                $file->error = $this->get_error_message('max_height');
-                return false;
-            }
-            if ($min_width && $img_width < $min_width) {
-                $file->error = $this->get_error_message('min_width');
-                return false;
-            }
-            if ($min_height && $img_height < $min_height) {
-                $file->error = $this->get_error_message('min_height');
-                return false;
-            }
+        if (!$content_range && $this->has_image_file_extension($file->name)) {
+            return $this->validate_image_file($uploaded_file, $file, $error, $index);
         }
         return true;
     }
