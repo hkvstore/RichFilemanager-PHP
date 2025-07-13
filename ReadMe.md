@@ -3,7 +3,7 @@ PHP connector for Rich Filemanager
 
 This package is the part of [RichFilemanager](https://github.com/servocoder/RichFilemanager) project.
 
-Requires PHP >= 5.6.4
+Requires PHP >= 8.2
 
 
 Introduction
@@ -62,8 +62,8 @@ $app = new \RFM\Application();
 2. Create and set storage class instance.
 Usually you will use a single storage, but it's possible initiate instances for various storages to use both in API.
 For example, AWS S3 API can use S3 storage instance to manage original files and Local storage to manage image thumbnails.
-More details in the [Configuration](#configuration) section. 
-   
+More details in the [Configuration](#configuration) section.
+
 ```php
 // local filesystem storage
 $local = new \RFM\Repository\Local\Storage();
@@ -74,7 +74,7 @@ $s3 = new \RFM\Repository\S3\Storage();
 $app->setStorage($s3);
 ```
 
-3. Create and set API class instance. You can set only one API instance unlike storage instances. 
+3. Create and set API class instance. You can set only one API instance unlike storage instances.
 
 ```php
 // local filesystem API
@@ -88,7 +88,7 @@ OR
 $app->api = new RFM\Api\AwsS3Api();
 ```
 
-4. Run application. 
+4. Run application.
 
 ```php
 $app->run();
