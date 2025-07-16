@@ -1114,8 +1114,8 @@ class BaseUploadHandler
             return false;
         }
 
-    protected function is_valid_image_file($file_path) {
-        return !!$this->imagetype($file_path);
+    protected function is_valid_image_file($file) {
+        return !!$this->imagetype($file->path);
         }
 
     protected function has_image_file_extension($file_path) {
